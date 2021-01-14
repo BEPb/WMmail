@@ -116,6 +116,13 @@ def main():
                 print('capcha save', capha)
                 pg.hotkey()
                 pg.hotkey('ctrl', 's')
+                if capha == 0:
+                    simple_press('btn_new_folder.png')
+                    time.sleep(1)
+                    simple_press('btn_open.png')
+                    time.sleep(1)
+                    simple_press('btn_open.png')
+                    time.sleep(1)
                 time.sleep(1)
                 simple_press('btn_save.png')
                 time.sleep(1)
