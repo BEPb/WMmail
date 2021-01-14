@@ -173,3 +173,24 @@ while "Бесконечный цикл":
 #     f.write(req.content)
 
 
+
+#            action = ActionChains()
+#             action.key_down(Keys.CONTROL).send_keys('s').key_up(Keys.CONTROL).perform()  # сохранить
+#             time.sleep(1)
+#             action.key_down(Keys.ENTER).key_up(Keys.ENTER).perform()
+#             action.key_down(Keys.CONTROL).send_keys('r').key_up(Keys.CONTROL).perform()  # обновить
+#             time.sleep(1)
+
+# main_page = driver.page_source
+# print(main_page)
+# main_page = driver.find_element_by_tag_name("html")
+# print(main_page)
+#
+#
+# main_page.send_keys(Keys.CONTROL + 's')
+# main_page.send_keys(Keys.ENTER)
+
+# driver.save_screenshot(f"{capha}.png")
+# body = driver.find_element_by_tag_name("body")
+# body.send_keys(Keys.CONTROL, 's')
+# body.send_keys(Keys.ENTER)
