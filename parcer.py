@@ -1,6 +1,8 @@
 # import driver as driver
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import os
+import requests
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ES
@@ -18,8 +20,6 @@ def search_letter():
         if a[0:53] == 'http://www.wmmail.ru/index.php?cf=mail-readpmail&mid=':
             driver.get(a)
             mid = a[53:59]
-            # print(a)
-            # print(mid)
             return mid
             break
 
@@ -36,13 +36,13 @@ def search_job():
 
             if a[0:68] == href_uid_mid:
                 driver.get(a)
+
                 break
 
 
 # chrome_options = Options()
 # chrome_options.add_argument("--headless")  # Работа с хромом в невидимом режиме
 # driver = webdriver.Chrome(options=chrome_options)
-
 
 
 driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")
@@ -57,6 +57,7 @@ password_site.send_keys(Keys.ENTER)
 
 letter_number = driver.find_element_by_partial_link_text('Письма').get_attribute('text')
 letter_href = driver.find_element_by_partial_link_text('Письма').get_attribute('href')
+
 #while letter_number[8] != '0':
 driver.get(letter_href)
 letter_href = driver.find_element_by_partial_link_text('Письма').get_attribute('href')
@@ -66,49 +67,27 @@ search_job()
 
 time.sleep(45)
 
-print('search capcha')
+driver.switch_to.frame("timerfrm") # переход в фрейм с именем
 
+elements = driver.find_elements_by_class_name('cifra')
 
-capcha_frame = driver.find_element_by_name("timerfrm")
-
-
-elements = capcha_frame.find_elements_by_xpath('//img[@src]')
+print('поиск цифр, всего найдено -', len(elements))
 for element in elements:
-    a = element.get_attribute("src")
-    print(a)
-#    a.driver.save_screenshot("capcha.png")
+    cifra = element.get_attribute('text')
+    print(cifra)
 
 
+elements = driver.find_elements_by_xpath('//img[@src]')
+print('search capcha')
+print(len(elements))
 
+for element in elements:
+    url_capcha = element.get_attribute("src")
+    if url_capcha[0:48] == 'http://www.wmmail.ru/index.php?cf=pmail-viewimg&':
+        print(url_capcha)
+        driver.get(url_capcha)
+        print('Done')
+        break
 
-
-
-# window_list = driver.window_handles  # список открытых сейчас вкладок
-# current_window = driver.current_window_handle  # рабочее окно
-#
-# print(window_list)
-# print(current_window)
-
-
-
-
-
-
-#     timer_site = driver.find_element_by_id("seconds")
-#     while timer_site != 1:
-#         timer_site = driver.find_element_by_id("seconds").get_attribute('text')
-#         print(timer_site)
-#
-#
-#     # elements = driver.find_elements_by_xpath('//tbody/tr/td/img[@src]')
-#     # for element in elements:
-#     #     a = element.get_attribute("src")
-#     cifra_capcha = driver.find_elements_by_class_name('cifra')
-#     for element in cifra_capcha:
-#         a = element.get_attribute("src")
-#         print(cifra_capcha)
-#
-#
-# #    time.sleep(60)
-#
-# # driver.close()
+driver.switch_to.default_content()
+driver.close()

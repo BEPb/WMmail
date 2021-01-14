@@ -95,3 +95,81 @@ while "Бесконечный цикл":
     pointclick()
     time.sleep(5)
     second_enter_login()
+
+
+#
+# capcha_frame = driver.find_element_by_name("timerfrm")
+# print(capcha_frame)
+#
+# a = driver.find_elements(By.TAG_NAME, 'img')
+# print(len(a))
+#
+# a = capcha_frame.find_elements(By.TAG_NAME, 'img')
+# print(len(a))
+#
+# main_page = driver.find_elements_by_tag_name("html")
+# print(len(main_page))
+#
+# main_page = driver.page_source
+#
+# print(main_page)
+
+# main_page = driver.page_source # получить html текущего фрейма
+# print(main_page)
+
+
+# driver.switch_to.default_content()   # Чтобы вернуться в Top Window
+
+
+# window_list = driver.window_handles  # список открытых сейчас вкладок
+# current_window = driver.current_window_handle  # рабочее окно
+#
+# print(window_list)
+# print(current_window)
+
+
+
+
+
+
+#     timer_site = driver.find_element_by_id("seconds")
+#     while timer_site != 1:
+#         timer_site = driver.find_element_by_id("seconds").get_attribute('text')
+#         print(timer_site)
+#
+#
+#     # elements = driver.find_elements_by_xpath('//tbody/tr/td/img[@src]')
+#     # for element in elements:
+#     #     a = element.get_attribute("src")
+#     cifra_capcha = driver.find_elements_by_class_name('cifra')
+#     for element in cifra_capcha:
+#         a = element.get_attribute("src")
+#         print(cifra_capcha)
+#
+#
+# #    time.sleep(60)
+
+
+
+
+
+
+
+# блок работы с requests
+# url = letter_url  # присваиваем текущий адрес
+#
+# headers = {
+#     "Accept": "*/*",
+#     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36"
+# }
+# req = requests.get(url, headers=headers)  # прописываем порядок запросов
+# src = req.text  # присваиваем переменной весь html код
+# print(src)  # выводим html код
+
+# with open("index.html", "w") as file:  # сохраняем полученный html-код в файл
+#     file.write(src)
+
+# with open("sample.jpg", 'wb') as f:   # сохраняем картинку
+#     f.write(req.content)
+
+
