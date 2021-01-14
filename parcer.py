@@ -4,7 +4,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import pyautogui as pg
 from selenium.webdriver.common.action_chains import ActionChains
-import pyautogui as pg  # работа с картинками
 import os
 import requests
 from selenium.webdriver.common.by import By
@@ -65,6 +64,8 @@ def main():
     driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")
     driver.get('http://www.wmmail.ru/index.php?cf=akk-viewstat/')
 
+    driver.set_window_size(1600, 900)
+    driver.maximize_window()
     # body = driver.find_element_by_tag_name("body")
     # body.send_keys(Keys.CONTROL, 's')
     # time.sleep(2)
@@ -112,19 +113,17 @@ def main():
             driver.switch_to.default_content()
             driver.get(url_capcha)
 
-            for capha in range(1000):
+            for capha in range(10):
                 print('capcha save', capha)
-                pg.hotkey()
                 pg.hotkey('ctrl', 's')
                 if capha == 0:
-                    simple_press('btn_new_folder.png')
-                    time.sleep(1)
-                    simple_press('btn_open.png')
-                    time.sleep(1)
-                    simple_press('btn_open.png')
-                    time.sleep(1)
-                time.sleep(1)
-                simple_press('btn_save.png')
+                    time.sleep(10)
+                    pg.hotkey('ctrl', 'shift', 'n')
+                    time.sleep(5)
+                    pg.hotkey('enter')
+                    time.sleep(2)
+                    pg.hotkey('enter')
+                    time.sleep(2)
                 time.sleep(1)
                 pg.hotkey('enter')
             print('Done')
