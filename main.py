@@ -194,3 +194,11 @@ while "Бесконечный цикл":
 # body = driver.find_element_by_tag_name("body")
 # body.send_keys(Keys.CONTROL, 's')
 # body.send_keys(Keys.ENTER)
+
+    # body = driver.find_element_by_tag_name("body")
+    # body.send_keys(Keys.CONTROL, 's')
+    # time.sleep(2)
+    # body.send_keys(Keys.ENTER)
+    # time.sleep(2)
+    # screenshot = driver.save_screenshot("{i}.png")
+    # driver.close()
