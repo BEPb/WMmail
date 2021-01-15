@@ -91,7 +91,7 @@ def main():
             print(url_capcha)
             driver.switch_to.default_content()
             driver.get(url_capcha)
-            for capha in range(1000):
+            for capha in range(100):
                 print('capcha save', capha)
                 pg.hotkey('enter')
                 time.sleep(1)
@@ -115,5 +115,8 @@ def main():
     driver.close()
 
 
+
+
 if __name__ == "__main__":
-    main()
+    for number in range (100):
+        main()
