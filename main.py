@@ -1,4 +1,5 @@
 # python3
+#
 
 import subprocess  # Запуск приложений windows
 import time  # работа со временем
