@@ -254,7 +254,9 @@ def fill_table():  # заполняем строку таблицы
 
 def main():
     global driver, number_of_letters, amount_of_money
-    driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")
+    #driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe
+
+    driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
 
     driver.get('http://www.wmmail.ru/index.php?cf=akk-viewstat/')
 #    driver.set_window_size(1600, 900)
