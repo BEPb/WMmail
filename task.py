@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 import time
-import cv2
+import cv2  # библиотека  OpenCV обработки изображений и видео
 
 
 def check_exists_by_name(name):
