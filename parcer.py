@@ -1,4 +1,5 @@
 # python3
+# бот по просмотру писем и выполнению заданий
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -185,7 +186,7 @@ def capcha_analiz(image_element):
     return label
 
 
-def check_exists_by_name(name):
+def check_exists_by_name(name):  # проверка на наличие соответсвующего имени
     try:
         driver.find_element_by_name(name)
     except NoSuchElementException:

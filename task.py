@@ -1,5 +1,5 @@
 # python3
-
+# модуль выполнения заданий
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
@@ -174,8 +174,7 @@ def task_1():
     element.click()
 
 
-    element = driver.find_element_by_xpath("//input[@value='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
-    element.click()
+
 
     ##### анализ проверочной капчи из 5 цифр
     elements = driver.find_elements_by_xpath('//img[@src]')  # находим капчу <img src="index.php?cf=reg-lostpassnum&amp;rnd=1619526.4295704" alt="" border="0">
@@ -290,3 +289,6 @@ def task_2():
 
 #нажать на кнопку подтверждения
 #<input type="submit" name="Submit" value="Начать выполнять задание">
+
+    # element = driver.find_element_by_xpath("//input[@value='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
+    # element.click()
