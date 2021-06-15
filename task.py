@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 import time
+import cv2
 
 
 def check_exists_by_name(name):
@@ -129,6 +130,7 @@ def capcha_analiz(image_element):
 def crop(image, coords, saved_location):  # функция обрезки
     image_obj = Image.open(image)
     cropped_image = image_obj.crop(coords)
+    cropped_image = cv2.resize(cropped_image, (18, 60))  # изменяем размер одной цифры необх. для анализа
     cropped_image.save(saved_location)
 
 
