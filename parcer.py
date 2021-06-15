@@ -266,8 +266,9 @@ def main():
     login_site = driver.find_element_by_name("ulogin")
     login_site.send_keys('3BEPb1')
     password_site = driver.find_element_by_name("pass")
-    password_site.send_keys('3BEPb120')
+    password_site.send_keys('F0eX1lf5NH1111')
     password_site.send_keys(Keys.ENTER)
+
 
     # обходим проверочный код
     if check_exists_by_name("pass1") == True:
