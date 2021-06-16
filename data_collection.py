@@ -1,15 +1,11 @@
 # python 3.9
-# программа для сбора капч (данных) для машинного обучения
+# программа для сбора капч (данных) для машинного обучения, используется уязвимость wmmail после обновления страницы - меняется капча
+# цель собрать достаточно капч (4000) для тренировки в папку data.  Выполнено 16.06.2021
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-import time
 from PIL import Image
-from keras.models import load_model
-import argparse
-import pickle
-import cv2
 
 def check_exists_by_name(name):  # проверка на наличие соответсвующего имени
     try:
@@ -49,25 +45,27 @@ def main():
     element.click()
 
     ##### анализ проверочной капчи из 5 цифр
-    elements = driver.find_elements_by_xpath(
-        '//img[@src]')  # находим капчу <img src="index.php?cf=reg-lostpassnum&amp;rnd=1619526.4295704" alt="" border="0">
-    print('search capcha')
+    for a in range(2976, 4000):
+        driver.switch_to.window(driver.window_handles[1])  # переход в окно 1
+        elements = driver.find_elements_by_xpath('//img[@src]')
 
-    for number_save_capcha in range(10):
-
-        for element in elements:
+        for element in elements:   # во множестве ссылок выбираем именно нашу капчу
             url_capcha = element.get_attribute("src")
-            if url_capcha[0:36] == 'index.php?cf=reg-lostpassnum&amp;rnd=':
-                print(url_capcha)
-
+            if url_capcha[0:53] == 'http://www.wmmail.ru/index.php?cf=reg-lostpassnum&rnd':
                 screenshot_as_bytes = element.screenshot_as_png
-                time.sleep(2)
+                with open('capcha.png', 'wb') as f:
+                    f.write(screenshot_as_bytes)
 
-    #            im = Image.open("capcha.png")  # uses PIL library to open image in memory
-    #            im.save('screenshot.png')  # saves new cropped image
+                im = Image.open("capcha.png")  # uses PIL library to open image in memory
+                im.save(r'C:\Users\admin\PycharmProjects\WMmail\data\screenshot'+ str(a) + '.png')  # saves new cropped image
+
+        driver.refresh()  # обновить страницу
+
 
     print('Done')
 
+    driver.close()
+    driver.switch_to.window(driver.window_handles[0])
     driver.close()
 
 
