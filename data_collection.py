@@ -1,20 +1,15 @@
-# python3
+# python 3.9
 # программа для сбора капч (данных) для машинного обучения
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 import time
-from datetime import datetime
 from PIL import Image
 from keras.models import load_model
 import argparse
 import pickle
 import cv2
-import sqlite3  # Импортируем библиотеку, соответствующую типу нашей базы данных
-
-import task
-
 
 def check_exists_by_name(name):  # проверка на наличие соответсвующего имени
     try:
@@ -27,9 +22,9 @@ def check_exists_by_name(name):  # проверка на наличие соот
 
 def main():
     global driver, number_of_letters, amount_of_money
-    #driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMRBOOK
+    driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMEBOOK
 
-    driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
+    #driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
     driver.get('http://www.wmmail.ru/index.php?cf=akk-viewstat/')
     # вводим логин
     login_site = driver.find_element_by_name("ulogin")
@@ -58,13 +53,18 @@ def main():
         '//img[@src]')  # находим капчу <img src="index.php?cf=reg-lostpassnum&amp;rnd=1619526.4295704" alt="" border="0">
     print('search capcha')
 
-    for element in elements:
-        url_capcha = element.get_attribute("src")
-        if url_capcha[0:36] == 'index.php?cf=reg-lostpassnum&amp;rnd=':
-            print(url_capcha)
+    for number_save_capcha in range(10):
 
-            screenshot_as_bytes = element.screenshot_as_png
+        for element in elements:
+            url_capcha = element.get_attribute("src")
+            if url_capcha[0:36] == 'index.php?cf=reg-lostpassnum&amp;rnd=':
+                print(url_capcha)
 
+                screenshot_as_bytes = element.screenshot_as_png
+                time.sleep(2)
+
+    #            im = Image.open("capcha.png")  # uses PIL library to open image in memory
+    #            im.save('screenshot.png')  # saves new cropped image
 
     print('Done')
 

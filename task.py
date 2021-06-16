@@ -136,9 +136,9 @@ def crop(image, coords, saved_location):  # функция обрезки
 
 def task_1():
     global driver
-    #driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
+    driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
 
-    driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
+    #driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
 
     driver.get('https://www.google.com/')
     google_poisk = driver.find_element_by_name("q")
@@ -149,8 +149,10 @@ def task_1():
 
     viewing_ads()
 
+    driver = webdriver.Chrome(
+        r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
 
-    driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")
+    #driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")
     driver.get('http://www.wmmail.ru/index.php?cf=akk-viewstat/')
 
     # вводим логин

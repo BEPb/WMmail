@@ -12,7 +12,6 @@ import argparse
 import pickle
 import cv2
 import sqlite3  # Импортируем библиотеку, соответствующую типу нашей базы данных
-
 import task
 
 def search_letter():
@@ -255,9 +254,9 @@ def fill_table():  # заполняем строку таблицы
 
 def main():
     global driver, number_of_letters, amount_of_money
-    #driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMRBOOK
+    driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMEBOOK
 
-    driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
+    #driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
 
     driver.get('http://www.wmmail.ru/index.php?cf=akk-viewstat/')
 #    driver.set_window_size(1600, 900)
