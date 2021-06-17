@@ -108,7 +108,9 @@ for file in files("."):
 
     capcha_analiz(file)
 
-    result_file = result_dir + "\\" + str(label) + "\\" + str(num) + ".png"
+    #result_file = result_dir + "\\" + str(label) + "\\" + str(num) + ".png"  # for redmebook
+    result_file = result_dir + "/" + str(label) + "/" + str(num) + ".png"  # for google colab
+
     resized_img.save(result_file)
     num += 1
 
