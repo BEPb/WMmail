@@ -73,10 +73,17 @@ def capcha_analiz(image_element):
     #     print(label)
     return label
 
+##### for redmebook
+# source_dir = r'C:\Users\admin\PycharmProjects\WMmail\test'
+# result_dir = r'C:\Users\admin\PycharmProjects\WMmail\result_analiz'
+# work_dir = r'C:\Users\admin\PycharmProjects\WMmail'
 
-source_dir = r'C:\Users\admin\PycharmProjects\WMmail\test'
-result_dir = r'C:\Users\admin\PycharmProjects\WMmail\result_analiz'
-work_dir = r'C:\Users\admin\PycharmProjects\WMmail'
+#### for google colab
+source_dir = r'/content/WMmail/test'
+result_dir = r'C/content/WMmail/result_analiz'
+work_dir = r'/content/WMmail'
+
+
 label = 'others'
 
 os.chdir(source_dir)  # смена текущей директории
