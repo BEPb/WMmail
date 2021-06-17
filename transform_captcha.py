@@ -1,10 +1,7 @@
 # python3
-# бот по просмотру писем и выполнению заданий
+# цель - провести начальную обработку капч из папки data в папку cropd_capcha обрезая лишние пустые поля.  Выполнено 17.06.2021
 
-import cv2  # библиотека  OpenCV обработки изображений и видео
 import os
-from pathlib import Path
-import sys
 from PIL import Image
 
 
@@ -15,27 +12,13 @@ def crop(image, coords, saved_location):  # функция обрезки
     cropped_image.save(saved_location)
 
 
-def process_files(files):
-    for file in files:
-        with open(file, 'w+b') as file_opend:
-            coords = (16, 0, 100, 40)
-            print(file_opend)
-            print(coords)
-            print(result_dir)
-            myimage = Image.open(file)
-            myimage.load()
-            #crop(file_opend, coords, result_dir)
-
-
-
-
-# C:\Users\admin\PycharmProjects\WMmail\data\cropd_capcha
 source_dir = r'C:\Users\admin\PycharmProjects\WMmail\data'
-result_dir = r'/cropd_capcha'
+result_dir = r'C:\Users\admin\PycharmProjects\WMmail\cropd_capcha'
+coords = (16, 0, 100, 40)
 os.chdir(source_dir)  # смена текущей директории
 
 
-def files(path):
+def files(path):  # функция получения списка файлов в папке (текущем каталоге)
     for file in os.listdir(path):
         if os.path.isfile(os.path.join(path, file)):
             yield file
@@ -43,14 +26,62 @@ def files(path):
 
 for file in files("."):
     print(file)
-    with open(file, 'w+b') as file_opend:
-        coords = (16, 0, 100, 40)
-        print(file_opend)
-        print(coords)
-        print(result_dir)
-        myimage = Image.open(file)
-        myimage.load()
-        # crop(file_opend, coords, result_dir)
+    curDir = os.getcwd()
+    fn = curDir + "\\" + file
+    result_file = result_dir + "\\" + file
+    print(fn)
+    crop(file, coords, result_file)
+
+
+
+
+    #with open('capcha.png', 'wb') as f:
+       # f.write(screenshot_as_bytes)
+
+# def process_files(files):
+#     for file in files:
+#         with open(file, 'w+b') as file_opend:
+#             coords = (16, 0, 100, 40)
+#             print(file_opend)
+#             print(coords)
+#             print(result_dir)
+#             myimage = Image.open(file)
+#             myimage.load()
+#             #crop(file_opend, coords, result_dir)
+
+
+# print("Формат, Размер и тип изображения:")
+# print(original.format, original.size, original.mode)
+
+# file_opend = Image.open(fn)
+# file_opend.show()
+
+
+# try:
+#     original = Image.open(fn)
+# except FileNotFoundError:  # создаем обработчик ошибок, если файл не найден
+#     print("Файл не найден")
+
+
+# print(coords)
+    # print(result_dir)
+
+    #myimage = Image.open(file_opend)
+    #myimage.load()
+
+
+
+
+    # with open(file, 'w+b') as file_opend:
+    #     coords = (16, 0, 100, 40)
+    #     print(file_opend)
+    #     print(coords)
+    #     print(result_dir)
+    #
+    #     myimage = Image.open(file_opend)
+    #     myimage.load()
+    #     crop(file_opend, coords, result_dir)
+
 
 # coords = (16, 0, 100, 40)  # Обрезка пяти цифр из общей капчи 115х40 (отрезаем лишние квадраты в начале и конеце капчи)
 # coords_c1 = (0, 0, 16, 40)  # задаем координаты  цифры №1 17x40
@@ -61,6 +92,7 @@ for file in files("."):
 #
 # #            im = Image.open("capcha.png")  # uses PIL library to open image in memory
 # #            im.save('screenshot.png')  # saves new cropped image
+
 # crop("capcha.png", coords, 'crop_capcha.png')  # вырезаем 5 цифр
 # time.sleep(2)
 # crop('crop_capcha.png', coords_c1, 'number_c1.png') # вырезаем цифру №1
