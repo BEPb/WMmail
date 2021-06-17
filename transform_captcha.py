@@ -17,23 +17,40 @@ def crop(image, coords, saved_location):  # функция обрезки
 
 def process_files(files):
     for file in files:
-        with open(file, 'rb+') as file_opend:
+        with open(file, 'w+b') as file_opend:
             coords = (16, 0, 100, 40)
             print(file_opend)
             print(coords)
             print(result_dir)
-            crop(file_opend, coords, result_dir)
+            myimage = Image.open(file)
+            myimage.load()
+            #crop(file_opend, coords, result_dir)
+
 
 
 
 # C:\Users\admin\PycharmProjects\WMmail\data\cropd_capcha
 source_dir = r'C:\Users\admin\PycharmProjects\WMmail\data'
 result_dir = r'/cropd_capcha'
-os.chdir(source_dir) # смена текущей директории
+os.chdir(source_dir)  # смена текущей директории
 
-files = os.listdir(path=".")
-#print(files)
-process_files(files)
+
+def files(path):
+    for file in os.listdir(path):
+        if os.path.isfile(os.path.join(path, file)):
+            yield file
+
+
+for file in files("."):
+    print(file)
+    with open(file, 'w+b') as file_opend:
+        coords = (16, 0, 100, 40)
+        print(file_opend)
+        print(coords)
+        print(result_dir)
+        myimage = Image.open(file)
+        myimage.load()
+        # crop(file_opend, coords, result_dir)
 
 # coords = (16, 0, 100, 40)  # Обрезка пяти цифр из общей капчи 115х40 (отрезаем лишние квадраты в начале и конеце капчи)
 # coords_c1 = (0, 0, 16, 40)  # задаем координаты  цифры №1 17x40
