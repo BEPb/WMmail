@@ -31,7 +31,7 @@ def capcha_analiz(image_element):
 
     # загружаем входное изображение и меняем его размер на необходимый
     image = cv2.imread(image_element)
-    output = image.copy()
+    #output = image.copy()
 
     image = cv2.resize(image, (18, 60))
 
@@ -52,8 +52,10 @@ def capcha_analiz(image_element):
 
     # загружаем модель и бинаризатор меток
     print("[INFO] loading network and label binarizer...")
+    os.chdir(work_dir)
     model = load_model(args["model"])
     lb = pickle.loads(open(args["label_bin"], "rb").read())
+    os.chdir(source_dir)
 
     # делаем предсказание на изображении
     preds = model.predict(image)
@@ -61,14 +63,20 @@ def capcha_analiz(image_element):
     # находим индекс метки класса с наибольшей вероятностью
     # соответствия
     i = preds.argmax(axis=1)[0]
+
     label = lb.classes_[i]
     text = "{}: {:.2f}%".format(label, preds[0][i] * 100)
     print(text)  # значение + процент
+    #print(preds[0][i] * 100)
+    # if (preds[0][i] * 100) <= 90:
+    #     label = 'others'
+    #     print(label)
     return label
 
 
 source_dir = r'C:\Users\admin\PycharmProjects\WMmail\test'
 result_dir = r'C:\Users\admin\PycharmProjects\WMmail\result_analiz'
+work_dir = r'C:\Users\admin\PycharmProjects\WMmail'
 label = 'others'
 
 os.chdir(source_dir)  # смена текущей директории
@@ -90,8 +98,10 @@ for file in files("."):
     height = 60
     resized_img = image_obj.resize((width, height), Image.ANTIALIAS)  # изменяем размер одной цифры необх. для анализа
 
-    capcha_analiz(resized_img)
+
+    capcha_analiz(file)
 
     result_file = result_dir + "\\" + str(label) + "\\" + str(num) + ".png"
     resized_img.save(result_file)
+    num += 1
 
