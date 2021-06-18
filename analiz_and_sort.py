@@ -80,7 +80,7 @@ def capcha_analiz(image_element):
 
 #### for google colab
 source_dir = r'/content/WMmail/test'
-result_dir = r'C/content/WMmail/result_analiz'
+result_dir = r'/content/WMmail/result_analiz'
 work_dir = r'/content/WMmail'
 
 
