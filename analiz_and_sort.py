@@ -11,8 +11,6 @@ import cv2
 import pickle
 from keras.models import load_model
 
-
-
 def capcha_analiz(image_element):
     global label
     # создаём парсер аргументов и передаём их

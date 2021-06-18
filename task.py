@@ -6,6 +6,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 import time
 import cv2  # библиотека  OpenCV обработки изображений и видео
+from PIL import Image
+from keras.models import load_model
+import argparse
+import pickle
 
 
 def check_exists_by_name(name):
@@ -66,8 +70,8 @@ def viewing_ads():  # просмотр рекламы
 
     time.sleep(30)
 
-    for i in range(1, 5):  # закрывает все вкладки рекламы
-        driver.switch_to_window(driver.window_handles[1])
+    for i in range(1, 6):  # закрывает все вкладки рекламы
+        driver.switch_to_window(driver.window_handles[0])
         driver.close()
 
     return url_total
@@ -131,7 +135,6 @@ def capcha_analiz(image_element):
 def crop(image, coords, saved_location):  # функция обрезки
     image_obj = Image.open(image)
     cropped_image = image_obj.crop(coords)
-    cropped_image = cv2.resize(cropped_image, (18, 60))  # изменяем размер одной цифры необх. для анализа
     cropped_image.save(saved_location)
 
 
@@ -145,9 +148,7 @@ def task_1():
     google_poisk = driver.find_element_by_name("q")
     google_poisk.send_keys('Cofax ru')
     google_poisk.send_keys(Keys.ENTER)
-
     find_google('Игры онлайн - Cofax.ru')
-
     viewing_ads()
 
     driver = webdriver.Chrome(
@@ -173,66 +174,90 @@ def task_1():
     tak_id_input = driver.find_element_by_name("zd_name")
     tak_id_input.send_keys('1595642')
     tak_id_input.send_keys(Keys.ENTER)
+
     driver.find_element_by_partial_link_text('КЛИКАТЬ на 4 баннер рекламы').click()
 
     element = driver.find_element_by_xpath("//input[@type = 'submit']")
     element.click()
 
     ##### анализ проверочной капчи из 5 цифр
-    elements = driver.find_elements_by_xpath('//img[@src]')  # находим капчу <img src="index.php?cf=reg-lostpassnum&amp;rnd=1619526.4295704" alt="" border="0">
-    print('search capcha')
+    driver.switch_to.window(driver.window_handles[1])  # переход в окно 1
+    capcha_reshena = 0
+    print('Начинаем решать качпу')
 
-    for element in elements:
-        url_capcha = element.get_attribute("src")
-        if url_capcha[0:36] == 'index.php?cf=reg-lostpassnum&amp;rnd=':
-            print(url_capcha)
+    while capcha_reshena == 0:
+        time.sleep(2)
 
-            screenshot_as_bytes = element.screenshot_as_png
-            with open('capcha.png', 'wb') as f:
-                f.write(screenshot_as_bytes)
+        elements = driver.find_elements_by_xpath('//img[@src]')
+        print("Решаем")
 
-            coords = (16, 0, 100, 40)  # Обрезка пяти цифр из общей капчи 115х40 (отрезаем лишние квадраты в начале и конеце капчи)
-            coords_c1 = (0, 0, 16, 40)  # задаем координаты  цифры №1 17x40
-            coords_c2 = (17, 0, 34, 40)  # задаем координаты  цифры №2 17x40
-            coords_c3 = (35, 0, 51, 40)  # задаем координаты  цифры №3 17x40
-            coords_c4 = (52, 0, 68, 40)  # задаем координаты  цифры №4 17x40
-            coords_c5 = (69, 0, 85, 40)  # задаем координаты  цифры №5 17x40
-
-            #            im = Image.open("capcha.png")  # uses PIL library to open image in memory
-            #            im.save('screenshot.png')  # saves new cropped image
-            crop("capcha.png", coords, 'crop_capcha.png')  # вырезаем 5 цифр
-            time.sleep(2)
-            crop('crop_capcha.png', coords_c1, 'number_c1.png') # вырезаем цифру №1
-            crop('crop_capcha.png', coords_c2, 'number_c2.png') # вырезаем цифру №2
-            crop('crop_capcha.png', coords_c3, 'number_c3.png')  # вырезаем цифру №3
-            crop('crop_capcha.png', coords_c4, 'number_c4.png')  # вырезаем цифру №4
-            crop('crop_capcha.png', coords_c5, 'number_c5.png')  # вырезаем цифру №5
-
-            #приступаем к анализу каждой цифры
-            capcha_analiz('number_c1.png')
-            number_c1 = label
-            print('левая цифра', number_c1)
-            capcha_analiz('number_c2.png')
-            number_c2 = label
-            print('левая цифра', number_c2)
-            capcha_analiz('number_c3.png')
-            number_c3 = label
-            print('левая цифра', number_c3)
-            capcha_analiz('number_c4.png')
-            number_c4 = label
-            print('левая цифра', number_c4)
-            capcha_analiz('number_c5.png')
-            number_c5 = label
-            print('левая цифра', number_c5)
-
-            number = number_c1 + number_c2 + number_c3 + number_c4 + number_c5
-            print(number)
-
-            capcha_site = driver.find_element_by_name("pnum")  # находим окно для ввода капчи
-            capcha_site.send_keys(number)
-            capcha_site.send_keys(Keys.ENTER)
+        for element in elements:  # во множестве ссылок выбираем именно нашу капчу
+            url_capcha = element.get_attribute("src")
+            if url_capcha[0:53] == 'http://www.wmmail.ru/index.php?cf=reg-lostpassnum&rnd':
+                screenshot_as_bytes = element.screenshot_as_png
+                with open('capcha.png', 'wb') as f:
+                    f.write(screenshot_as_bytes)
 
 
+                coords = (16, 0, 100, 40)  # Обрезка пяти цифр из общей капчи 115х40 (отрезаем лишние квадраты в начале и конеце капчи)
+                coords_c1 = (0, 0, 16, 40)  # задаем координаты  цифры №1 17x40
+                coords_c2 = (17, 0, 34, 40)  # задаем координаты  цифры №2 17x40
+                coords_c3 = (35, 0, 51, 40)  # задаем координаты  цифры №3 17x40
+                coords_c4 = (52, 0, 68, 40)  # задаем координаты  цифры №4 17x40
+                coords_c5 = (69, 0, 85, 40)  # задаем координаты  цифры №5 17x40
+
+                #            im = Image.open("capcha.png")  # uses PIL library to open image in memory
+                #            im.save('screenshot.png')  # saves new cropped image
+                crop("capcha.png", coords, 'crop_capcha.png')  # вырезаем 5 цифр
+                time.sleep(2)
+                crop('crop_capcha.png', coords_c1, 'number_c1.png') # вырезаем цифру №1
+                crop('crop_capcha.png', coords_c2, 'number_c2.png') # вырезаем цифру №2
+                crop('crop_capcha.png', coords_c3, 'number_c3.png')  # вырезаем цифру №3
+                crop('crop_capcha.png', coords_c4, 'number_c4.png')  # вырезаем цифру №4
+                crop('crop_capcha.png', coords_c5, 'number_c5.png')  # вырезаем цифру №5
+
+                #приступаем к анализу каждой цифры
+                capcha_analiz('number_c1.png')
+                number_c1 = label
+                print('1 цифра', number_c1)
+                capcha_analiz('number_c2.png')
+                number_c2 = label
+                print('2 цифра', number_c2)
+                capcha_analiz('number_c3.png')
+                number_c3 = label
+                print('3 цифра', number_c3)
+                capcha_analiz('number_c4.png')
+                number_c4 = label
+                print('4 цифра', number_c4)
+                capcha_analiz('number_c5.png')
+                number_c5 = label
+                print('5 цифра', number_c5)
+
+                number = number_c1 + number_c2 + number_c3 + number_c4 + number_c5
+                print('Итоговая цифра', number)
+
+                capcha_site = driver.find_element_by_name("pnum")  # находим окно для ввода капчи
+                capcha_site.send_keys(number)
+                capcha_site.send_keys(Keys.ENTER)
+
+
+                elements = driver.find_elements_by_xpath('//img[@src]')
+
+                for element in elements:  # во множестве ссылок выбираем именно нашу капчу
+                    url_capcha = element.get_attribute("src")
+                    if url_capcha[0:53] == 'http://www.wmmail.ru/index.php?cf=reg-lostpassnum&rnd':
+                        url_faunded = 1
+
+                if url_faunded == 1:
+                    capcha_reshena = 0
+                else:
+                    capcha_reshena = 1
+            if capcha_reshena == 1:
+                break
+                break
+    time.sleep(2)
+    driver.close()
+    driver.switch_to.window(driver.window_handles[0])
 
 
 
@@ -280,7 +305,7 @@ def task_2():
     # onclick = "setInterval(function fresh() {location.reload();} , 1000);" >
 
 
-#task_1()
+task_1()
 
 #разделить картинку
 
@@ -294,3 +319,6 @@ def task_2():
 
     # element = driver.find_element_by_xpath("//input[@value='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
     # element.click()
+
+
+
