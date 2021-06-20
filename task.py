@@ -68,7 +68,7 @@ def viewing_ads():  # просмотр рекламы
     for element in url_total:
         print(element)
 
-    time.sleep(30)
+    time.sleep(1)
 
     for i in range(1, 6):  # закрывает все вкладки рекламы
         driver.switch_to_window(driver.window_handles[0])
@@ -183,6 +183,7 @@ def task_1():
     ##### анализ проверочной капчи из 5 цифр
     driver.switch_to.window(driver.window_handles[1])  # переход в окно 1
     capcha_reshena = 0
+    url_faunded = 0
     print('Начинаем решать качпу')
 
     while capcha_reshena == 0:
@@ -240,7 +241,6 @@ def task_1():
                 capcha_site.send_keys(number)
                 capcha_site.send_keys(Keys.ENTER)
 
-
                 elements = driver.find_elements_by_xpath('//img[@src]')
 
                 for element in elements:  # во множестве ссылок выбираем именно нашу капчу
@@ -254,7 +254,7 @@ def task_1():
                     capcha_reshena = 1
             if capcha_reshena == 1:
                 break
-                break
+
     time.sleep(2)
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
