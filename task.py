@@ -139,7 +139,7 @@ def crop(image, coords, saved_location):  # функция обрезки
 
 
 def task_1():
-    global driver
+    global driver, url_total
     driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
 
     #driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
@@ -241,6 +241,8 @@ def task_1():
                 capcha_site.send_keys(number)
                 capcha_site.send_keys(Keys.ENTER)
 
+                time.sleep(2)
+
                 elements = driver.find_elements_by_xpath('//img[@src]')
 
                 for element in elements:  # во множестве ссылок выбираем именно нашу капчу
@@ -250,6 +252,7 @@ def task_1():
 
                 if url_faunded == 1:
                     capcha_reshena = 0
+                    elements = driver.find_elements_by_xpath('//img[@src]')
                 else:
                     capcha_reshena = 1
             if capcha_reshena == 1:
@@ -258,6 +261,38 @@ def task_1():
     time.sleep(2)
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
+
+    # < input
+    # type = "submit"
+    # value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+    # style = "font-weight: bold;" >
+
+
+    # нажимаем на кнопку подтвердить выполнение задания
+    element = driver.find_element_by_xpath("//input[@value = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
+    element.click()
+
+    # < textarea
+    # cols = ""
+    # rows = "7"
+    # name = "zdtext"
+    # id = "zdtext"
+    # style = "width: 100%;" > < / textarea >
+
+    #вводим данные в окно
+    answer_window = driver.find_element_by_name("zdtext")
+    answer_window.send_keys(url_total)
+
+    # < input
+    # type = "submit"
+    # value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+    # style = "font-weight: bold;" >
+
+
+    # нажимаем на кнопку - отправить
+    element = driver.find_element_by_xpath(
+        "//input[@value = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
+    element.click()
 
 
 
