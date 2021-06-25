@@ -131,15 +131,81 @@ def capcha_analiz(image_element):
     print(text)  # значение + процент
     return label
 
+def complex_captcha (elements):
+    global capcha_reshena
+    url_faunded = 0
+    for element in elements:  # во множестве ссылок выбираем именно нашу капчу
+        url_capcha = element.get_attribute("src")
+        if url_capcha[0:53] == 'http://www.wmmail.ru/index.php?cf=reg-lostpassnum&rnd':
+            screenshot_as_bytes = element.screenshot_as_png
+            with open('capcha.png', 'wb') as f:
+                f.write(screenshot_as_bytes)
+
+            coords = (16, 0, 100, 40)  # Обрезка пяти цифр из общей капчи 115х40 (отрезаем лишние квадраты в начале и конеце капчи)
+            coords_c1 = (0, 0, 16, 40)  # задаем координаты  цифры №1 17x40
+            coords_c2 = (17, 0, 34, 40)  # задаем координаты  цифры №2 17x40
+            coords_c3 = (35, 0, 51, 40)  # задаем координаты  цифры №3 17x40
+            coords_c4 = (52, 0, 68, 40)  # задаем координаты  цифры №4 17x40
+            coords_c5 = (69, 0, 85, 40)  # задаем координаты  цифры №5 17x40
+
+            #            im = Image.open("capcha.png")  # uses PIL library to open image in memory
+            #            im.save('screenshot.png')  # saves new cropped image
+            crop("capcha.png", coords, 'crop_capcha.png')  # вырезаем 5 цифр
+            time.sleep(2)
+            crop('crop_capcha.png', coords_c1, 'number_c1.png') # вырезаем цифру №1
+            crop('crop_capcha.png', coords_c2, 'number_c2.png') # вырезаем цифру №2
+            crop('crop_capcha.png', coords_c3, 'number_c3.png')  # вырезаем цифру №3
+            crop('crop_capcha.png', coords_c4, 'number_c4.png')  # вырезаем цифру №4
+            crop('crop_capcha.png', coords_c5, 'number_c5.png')  # вырезаем цифру №5
+
+            #приступаем к анализу каждой цифры
+            capcha_analiz('number_c1.png')
+            number_c1 = label
+            print('1 цифра', number_c1)
+            capcha_analiz('number_c2.png')
+            number_c2 = label
+            print('2 цифра', number_c2)
+            capcha_analiz('number_c3.png')
+            number_c3 = label
+            print('3 цифра', number_c3)
+            capcha_analiz('number_c4.png')
+            number_c4 = label
+            print('4 цифра', number_c4)
+            capcha_analiz('number_c5.png')
+            number_c5 = label
+            print('5 цифра', number_c5)
+
+            number = number_c1 + number_c2 + number_c3 + number_c4 + number_c5
+            print('Итоговая цифра', number)
+
+            capcha_site = driver.find_element_by_name("pnum")  # находим окно для ввода капчи
+            capcha_site.send_keys(number)
+            capcha_site.send_keys(Keys.ENTER)
+
+            time.sleep(2)
+
+            elements = driver.find_elements_by_xpath('//img[@src]')
+
+            for element in elements:  # во множестве ссылок выбираем именно нашу капчу
+                url_capcha = element.get_attribute("src")
+                if url_capcha[0:53] == 'http://www.wmmail.ru/index.php?cf=reg-lostpassnum&rnd':
+                    url_faunded = 1
+
+            if url_faunded == 1:
+                capcha_reshena = 0
+                print('Кача решена не правильно')
+            else:
+                capcha_reshena = 1
+                print('Капча решена правильно')
+            return capcha_reshena
 
 def crop(image, coords, saved_location):  # функция обрезки
     image_obj = Image.open(image)
     cropped_image = image_obj.crop(coords)
     cropped_image.save(saved_location)
 
-
 def task_1():
-    global driver, url_total
+    global driver, url_total, capcha_reshena
     driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
 
     #driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
@@ -183,80 +249,15 @@ def task_1():
     ##### анализ проверочной капчи из 5 цифр
     driver.switch_to.window(driver.window_handles[1])  # переход в окно 1
     capcha_reshena = 0
-    url_faunded = 0
+
     print('Начинаем решать качпу')
 
-    while capcha_reshena == 0:
-        time.sleep(2)
+    time.sleep(2)
 
+    while capcha_reshena == 0:
         elements = driver.find_elements_by_xpath('//img[@src]')
         print("Решаем")
-
-        for element in elements:  # во множестве ссылок выбираем именно нашу капчу
-            url_capcha = element.get_attribute("src")
-            if url_capcha[0:53] == 'http://www.wmmail.ru/index.php?cf=reg-lostpassnum&rnd':
-                screenshot_as_bytes = element.screenshot_as_png
-                with open('capcha.png', 'wb') as f:
-                    f.write(screenshot_as_bytes)
-
-
-                coords = (16, 0, 100, 40)  # Обрезка пяти цифр из общей капчи 115х40 (отрезаем лишние квадраты в начале и конеце капчи)
-                coords_c1 = (0, 0, 16, 40)  # задаем координаты  цифры №1 17x40
-                coords_c2 = (17, 0, 34, 40)  # задаем координаты  цифры №2 17x40
-                coords_c3 = (35, 0, 51, 40)  # задаем координаты  цифры №3 17x40
-                coords_c4 = (52, 0, 68, 40)  # задаем координаты  цифры №4 17x40
-                coords_c5 = (69, 0, 85, 40)  # задаем координаты  цифры №5 17x40
-
-                #            im = Image.open("capcha.png")  # uses PIL library to open image in memory
-                #            im.save('screenshot.png')  # saves new cropped image
-                crop("capcha.png", coords, 'crop_capcha.png')  # вырезаем 5 цифр
-                time.sleep(2)
-                crop('crop_capcha.png', coords_c1, 'number_c1.png') # вырезаем цифру №1
-                crop('crop_capcha.png', coords_c2, 'number_c2.png') # вырезаем цифру №2
-                crop('crop_capcha.png', coords_c3, 'number_c3.png')  # вырезаем цифру №3
-                crop('crop_capcha.png', coords_c4, 'number_c4.png')  # вырезаем цифру №4
-                crop('crop_capcha.png', coords_c5, 'number_c5.png')  # вырезаем цифру №5
-
-                #приступаем к анализу каждой цифры
-                capcha_analiz('number_c1.png')
-                number_c1 = label
-                print('1 цифра', number_c1)
-                capcha_analiz('number_c2.png')
-                number_c2 = label
-                print('2 цифра', number_c2)
-                capcha_analiz('number_c3.png')
-                number_c3 = label
-                print('3 цифра', number_c3)
-                capcha_analiz('number_c4.png')
-                number_c4 = label
-                print('4 цифра', number_c4)
-                capcha_analiz('number_c5.png')
-                number_c5 = label
-                print('5 цифра', number_c5)
-
-                number = number_c1 + number_c2 + number_c3 + number_c4 + number_c5
-                print('Итоговая цифра', number)
-
-                capcha_site = driver.find_element_by_name("pnum")  # находим окно для ввода капчи
-                capcha_site.send_keys(number)
-                capcha_site.send_keys(Keys.ENTER)
-
-                time.sleep(2)
-
-                elements = driver.find_elements_by_xpath('//img[@src]')
-
-                for element in elements:  # во множестве ссылок выбираем именно нашу капчу
-                    url_capcha = element.get_attribute("src")
-                    if url_capcha[0:53] == 'http://www.wmmail.ru/index.php?cf=reg-lostpassnum&rnd':
-                        url_faunded = 1
-
-                if url_faunded == 1:
-                    capcha_reshena = 0
-                    elements = driver.find_elements_by_xpath('//img[@src]')
-                else:
-                    capcha_reshena = 1
-            if capcha_reshena == 1:
-                break
+        complex_captcha(elements)
 
     time.sleep(2)
     driver.close()
@@ -292,9 +293,6 @@ def task_1():
     # нажимаем на кнопку - отправить
     element = driver.find_element_by_xpath("//input[@value = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
     element.click()
-
-
-
 
     # < input
     # type = "submit"
