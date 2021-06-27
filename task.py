@@ -52,11 +52,11 @@ def viewing_ads():  # просмотр рекламы
 
             element.click()
             time.sleep(1)
-            driver.switch_to_window(driver.window_handles[a])
+            driver.switch_to.window(driver.window_handles[a])
             url = driver.current_url
             print(url)
             url_total.append(url)
-        driver.switch_to_window(driver.window_handles[0])
+        driver.switch_to.window(driver.window_handles[0])
 
     url_total.append(' ')
     url_total.append(' ')
@@ -79,7 +79,7 @@ def viewing_ads():  # просмотр рекламы
     time.sleep(1)
 
     for i in range(1, 6):  # закрывает все вкладки рекламы
-        driver.switch_to_window(driver.window_handles[0])
+        driver.switch_to.window(driver.window_handles[0])
         driver.close()
 
     return url_total
@@ -264,6 +264,7 @@ def task_1():
         element.click()
     except NoSuchElementException:
         print("Задание №1595642 не доступно к выполнению")
+        driver.close()
         return
 
     ##### анализ проверочной капчи из 5 цифр
@@ -329,7 +330,7 @@ def task_1():
     # style = "font-weight: bold;"
     # onclick = "setInterval(function fresh() {location.reload();} , 1000);" >
 
-    driver.switch_to_window(driver.window_handles[0])
+    driver.switch_to.window(driver.window_handles[0])
     driver.close()
 
 
