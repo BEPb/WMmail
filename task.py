@@ -19,12 +19,14 @@ def check_exists_by_name(name):
         return False
     return True
 
+
 def check_exists_by_link(name):
     try:
         driver.find_element_by_partial_link_text(name)
     except NoSuchElementException:
         return False
     return True
+
 
 def find_google(name):
     global start_link_adversting
@@ -37,10 +39,11 @@ def find_google(name):
         driver.find_element_by_partial_link_text(name).click()
     return start_link_advertising
 
+
 def viewing_ads():  # просмотр рекламы
     global url_total
     time.sleep(5)
-    url_total=[' ', ' ', 'Баннеры рекламы:', ' ']
+    url_total = [' ', ' ', 'Баннеры рекламы:', ' ']
     elements = driver.find_elements_by_xpath("//img[@nopin='nopin']")
     a = 0
     for element in elements:  # открываем 4 вкладки рекламы
@@ -68,6 +71,11 @@ def viewing_ads():  # просмотр рекламы
     for element in url_total:
         print(element)
 
+    # запись в файл отчета по просмотру по строчно
+    with open("task_report.txt", "w") as file:
+        for line in url_total:
+            file.write(line + '\n')
+
     time.sleep(1)
 
     for i in range(1, 6):  # закрывает все вкладки рекламы
@@ -76,12 +84,13 @@ def viewing_ads():  # просмотр рекламы
 
     return url_total
 
+
 def capcha_analiz(image_element):
     global label
     # создаём парсер аргументов и передаём их
     ap = argparse.ArgumentParser()
-#    ap.add_argument("-i", "--image", required=True,
-#                    help="path to input image we are going to classify")
+    #    ap.add_argument("-i", "--image", required=True,
+    #                    help="path to input image we are going to classify")
     ap.add_argument("-m", "--model", required=True,
                     help="path to trained Keras model")
     ap.add_argument("-l", "--label-bin", required=True,
@@ -131,7 +140,8 @@ def capcha_analiz(image_element):
     print(text)  # значение + процент
     return label
 
-def complex_captcha (elements):
+
+def complex_captcha(elements):
     global capcha_reshena
     url_faunded = 0
     for element in elements:  # во множестве ссылок выбираем именно нашу капчу
@@ -141,7 +151,8 @@ def complex_captcha (elements):
             with open('capcha.png', 'wb') as f:
                 f.write(screenshot_as_bytes)
 
-            coords = (16, 0, 100, 40)  # Обрезка пяти цифр из общей капчи 115х40 (отрезаем лишние квадраты в начале и конеце капчи)
+            coords = (16, 0, 100,
+                      40)  # Обрезка пяти цифр из общей капчи 115х40 (отрезаем лишние квадраты в начале и конеце капчи)
             coords_c1 = (0, 0, 16, 40)  # задаем координаты  цифры №1 17x40
             coords_c2 = (17, 0, 34, 40)  # задаем координаты  цифры №2 17x40
             coords_c3 = (35, 0, 51, 40)  # задаем координаты  цифры №3 17x40
@@ -152,13 +163,13 @@ def complex_captcha (elements):
             #            im.save('screenshot.png')  # saves new cropped image
             crop("capcha.png", coords, 'crop_capcha.png')  # вырезаем 5 цифр
             time.sleep(2)
-            crop('crop_capcha.png', coords_c1, 'number_c1.png') # вырезаем цифру №1
-            crop('crop_capcha.png', coords_c2, 'number_c2.png') # вырезаем цифру №2
+            crop('crop_capcha.png', coords_c1, 'number_c1.png')  # вырезаем цифру №1
+            crop('crop_capcha.png', coords_c2, 'number_c2.png')  # вырезаем цифру №2
             crop('crop_capcha.png', coords_c3, 'number_c3.png')  # вырезаем цифру №3
             crop('crop_capcha.png', coords_c4, 'number_c4.png')  # вырезаем цифру №4
             crop('crop_capcha.png', coords_c5, 'number_c5.png')  # вырезаем цифру №5
 
-            #приступаем к анализу каждой цифры
+            # приступаем к анализу каждой цифры
             capcha_analiz('number_c1.png')
             number_c1 = label
             print('1 цифра', number_c1)
@@ -199,16 +210,19 @@ def complex_captcha (elements):
                 print('Капча решена правильно')
             return capcha_reshena
 
+
 def crop(image, coords, saved_location):  # функция обрезки
     image_obj = Image.open(image)
     cropped_image = image_obj.crop(coords)
     cropped_image.save(saved_location)
 
+
 def task_1():
     global driver, url_total, capcha_reshena
-    driver = webdriver.Chrome(r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
+    driver = webdriver.Chrome(
+        r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
 
-    #driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
+    # driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
 
     driver.get('https://www.google.com/')
     google_poisk = driver.find_element_by_name("q")
@@ -220,7 +234,7 @@ def task_1():
     driver = webdriver.Chrome(
         r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
 
-    #driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")
+    # driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")
     driver.get('http://www.wmmail.ru/index.php?cf=akk-viewstat/')
 
     # вводим логин
@@ -238,13 +252,19 @@ def task_1():
 
     driver.find_element_by_partial_link_text('Задания').click()
     tak_id_input = driver.find_element_by_name("zd_name")
+
+    # поиск задания
     tak_id_input.send_keys('1595642')
     tak_id_input.send_keys(Keys.ENTER)
 
-    driver.find_element_by_partial_link_text('КЛИКАТЬ на 4 баннер рекламы').click()
-
-    element = driver.find_element_by_xpath("//input[@type = 'submit']")
-    element.click()
+    # выбор активного задания
+    try:
+        driver.find_element_by_partial_link_text('КЛИКАТЬ на 4 баннер рекламы').click()
+        element = driver.find_element_by_xpath("//input[@type = 'submit']")
+        element.click()
+    except NoSuchElementException:
+        print("Задание №1595642 не доступно к выполнению")
+        return
 
     ##### анализ проверочной капчи из 5 цифр
     driver.switch_to.window(driver.window_handles[1])  # переход в окно 1
@@ -268,7 +288,6 @@ def task_1():
     # value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     # style = "font-weight: bold;" >
 
-
     # нажимаем на кнопку подтвердить выполнение задания
 
     # element = driver.find_element_by_xpath('//input[@value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]')
@@ -285,7 +304,7 @@ def task_1():
     # id = "zdtext"
     # style = "width: 100%;" > < / textarea >
 
-    #вводим данные в окно
+    # вводим данные в окно
     answer_window = driver.find_element_by_name("zdtext")
     answer_window.send_keys(url_total)
 
@@ -293,7 +312,6 @@ def task_1():
     # type = "submit"
     # value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     # style = "font-weight: bold;" >
-
 
     # нажимаем на кнопку - отправить
     # element = driver.find_element_by_xpath("//input[@value = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
@@ -303,13 +321,17 @@ def task_1():
         if value_faunded == "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":
             element.click()
 
-    print('Задание выполнено')
+    print('Задание завершено')
 
     # < input
     # type = "submit"
     # value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Начать выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     # style = "font-weight: bold;"
     # onclick = "setInterval(function fresh() {location.reload();} , 1000);" >
+
+    driver.switch_to_window(driver.window_handles[0])
+    driver.close()
+
 
 def task_2():
     driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")
@@ -337,8 +359,8 @@ def task_2():
     element = driver.find_element_by_xpath("//input[@type = 'submit']")
     element.click()
 
-
-    element = driver.find_element_by_xpath("//input[@value='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
+    element = driver.find_element_by_xpath(
+        "//input[@value='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
     element.click()
 
     # < input
@@ -350,15 +372,15 @@ def task_2():
 
 task_1()
 
-#разделить картинку
+# разделить картинку
 
-#<img src="index.php?cf=reg-lostpassnum&amp;rnd=1622127.1898102" alt="" border="0">
+# <img src="index.php?cf=reg-lostpassnum&amp;rnd=1622127.1898102" alt="" border="0">
 
-#вставить в окно
-#<input type="text" name="pnum" size="5">
+# вставить в окно
+# <input type="text" name="pnum" size="5">
 
-#нажать на кнопку подтверждения
-#<input type="submit" name="Submit" value="Начать выполнять задание">
+# нажать на кнопку подтверждения
+# <input type="submit" name="Submit" value="Начать выполнять задание">
 
-    # element = driver.find_element_by_xpath("//input[@value='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
-    # element.click()
+# element = driver.find_element_by_xpath("//input[@value='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение
+# задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']") element.click()
