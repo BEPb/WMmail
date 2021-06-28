@@ -292,7 +292,7 @@ def task_1():
     # нажимаем на кнопку подтвердить выполнение задания
 
     # element = driver.find_element_by_xpath('//input[@value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]')
-    elements = driver.find_elements_by_xpath('//input[@type = "submit"')
+    elements = driver.find_elements_by_xpath("//input[@type = 'submit']")
     for element in elements:
         value_faunded = element.get_attribute("value")
         if value_faunded == "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":
@@ -316,7 +316,7 @@ def task_1():
 
     # нажимаем на кнопку - отправить
     # element = driver.find_element_by_xpath("//input[@value = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
-    elements = driver.find_elements_by_xpath('//input[@type = "submit"')
+    elements = driver.find_elements_by_xpath("//input[@type = 'submit']")
     for element in elements:
         value_faunded = element.get_attribute("value")
         if value_faunded == "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":
