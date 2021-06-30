@@ -219,6 +219,23 @@ def crop(image, coords, saved_location):  # функция обрезки
     cropped_image.save(saved_location)
 
 
+def active_window():
+    try:
+        driver.switch_to.window(driver.window_handles[1])
+    except IndexError:
+        driver.switch_to.window(driver.window_handles[0])
+
+
+def return_main_window():
+    try:
+        driver.switch_to.window(driver.window_handles[1])
+        driver.close()
+        driver.switch_to.window(driver.window_handles[0])
+    except IndexError:
+        driver.switch_to.window(driver.window_handles[0])
+        driver.find_element_by_tag_name('body').send_keys(Keys.ALT + Keys.ARROW_LEFT)
+
+
 def task_1():  # Оплачиваемое задание #1595642
     global driver, url_total, capcha_reshena
     driver = webdriver.Chrome(
@@ -296,6 +313,7 @@ def task_1():  # Оплачиваемое задание #1595642
     # element = driver.find_element_by_xpath('//input[@value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]')
     elements = driver.find_elements_by_xpath("//input[@type = 'submit']")
     for element in elements:
+        print(element)
         value_faunded = element.get_attribute("value")
         print(value_faunded)
         if value_faunded == "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":
@@ -311,19 +329,19 @@ def task_1():  # Оплачиваемое задание #1595642
     # вводим данные в окно
     answer_window = driver.find_element_by_name("zdtext")
     answer_window.send_keys(url_total)
-
+    answer_window.send_keys(Keys.LEFT_CONTROL + Keys.ENTER)  # это сочитание заменяет нажатие кнопки отправить
     # < input
     # type = "submit"
     # value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     # style = "font-weight: bold;" >
 
-    # нажимаем на кнопку - отправить
-    # element = driver.find_element_by_xpath("//input[@value = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
-    elements = driver.find_elements_by_xpath("//input[@type = 'submit']")
-    for element in elements:
-        value_faunded = element.get_attribute("value")
-        if value_faunded == "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":
-            element.click()
+    # # нажимаем на кнопку - отправить
+    # # element = driver.find_element_by_xpath("//input[@value = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;']")
+    # elements = driver.find_elements_by_xpath("//input[@type = 'submit']")
+    # for element in elements:
+    #     value_faunded = element.get_attribute("value")
+    #     if value_faunded == "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Отправить&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":
+    #         element.click()
 
     print('Задание завершено')
 
@@ -365,19 +383,42 @@ def task_2():  # Оплачиваемое задание #1342716
 
     time.sleep(5)
     # переход по верхнему баннеру
-    ActionChains(driver).move_by_offset(1000, 100).click().perform()
-    driver.switch_to.window(driver.window_handles[1])
+    ActionChains(driver).move_by_offset(1000, 100).click().perform()  # работает только для разрешения 1920х1080
+
+
+    active_window()
     url = driver.current_url
     print(url)
     url_total_2 = [' ', ' ', 'Баннер в шапке сайта:', ' ']
     url_total_2.append(url)
     print(url_total_2)
     time.sleep(2)
-    # driver.close()
+
+    return_main_window()
+
+    # # для отображения баннеров рекламы необходимо перейти по странице сайта через выпадающее меню
+    # driver.find_element_by_xpath("//i[@class = 'fa fm fa-clipboard']").click()  # после нажатия выпадает меню
+    # # < i class ="fa fm fa-clipboard" > < / i > Инфа о Кубани
+    #
+    # driver.find_element_by_xpath("//a[@href = '/viewforum.php?f=219']").click()  # переход на страницук сайта
+    # # < a href = "/viewforum.php?f=219" > Путеводитель по Краю < / a >
+
+    # переход по правому баннеру
+    ActionChains(driver).reset_actions()
+    ActionChains(driver).move_by_offset(1820, 980).click().perform()   # работает только для разрешения 1920х1080
+    active_window()
+    url = driver.current_url
+    print(url)
+    url_total_2.append(url)
+    print(url_total_2)
+    time.sleep(2)
+
+    return_main_window()
+
+    driver.close()
 
 
-
-
+    # # вводим отчет
     # driver.get('http://www.wmmail.ru/index.php?cf=akk-viewstat/')
     #
     # # вводим логин
@@ -395,10 +436,10 @@ def task_2():  # Оплачиваемое задание #1342716
     #
     # driver.find_element_by_partial_link_text('Задания').click()
     # tak_id_input = driver.find_element_by_name("zd_name")
-    # tak_id_input.send_keys('1595642')
+    # tak_id_input.send_keys('1342716')
     # tak_id_input.send_keys(Keys.ENTER)
     # driver.find_element_by_partial_link_text('КЛИКАТЬ на 4 баннер рекламы').click()
-    #
+
     # element = driver.find_element_by_xpath("//input[@type = 'submit']")
     # element.click()
     #
@@ -413,7 +454,7 @@ def task_2():  # Оплачиваемое задание #1342716
     # onclick = "setInterval(function fresh() {location.reload();} , 1000);" >
 
 
-#task_1()
+# task_1()
 task_2()
 
 
