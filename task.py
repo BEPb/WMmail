@@ -1,9 +1,11 @@
-# python3
+# python 3.9
 # модуль выполнения заданий
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException  # ожидание загрузки элемента
+from selenium.webdriver.support.ui import WebDriverWait  # ожидание загрузки элемента
 from selenium.webdriver.common.action_chains import ActionChains  # переход по координатам
 import time
 import cv2  # библиотека  OpenCV обработки изображений и видео
@@ -226,22 +228,39 @@ def active_window():
         driver.switch_to.window(driver.window_handles[0])
 
 
-def return_main_window():
+def return_main_window():  # функция перехода в основное окно
     try:
         driver.switch_to.window(driver.window_handles[1])
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
     except IndexError:
         driver.switch_to.window(driver.window_handles[0])
-        driver.find_element_by_tag_name('body').send_keys(Keys.ALT + Keys.ARROW_LEFT)
+        elem = driver.find_element_by_tag_name('body')
+        time.sleep(5)
+        elem.click()
+        driver.back()
 
+        # elem.send_keys(Keys.ALT + Keys.ARROW_LEFT)  # dont work
+        # driver.find_element_by_tag_name('body').send_keys(Keys.ALT + Keys.ARROW_LEFT) # dont work
+        # ActionChains(driver).key_down(Keys.ALT).send_keys(Keys.ARROW_LEFT).key_up(Keys.ALT).perform() # dont work
+        print('find body')
+
+
+def wait_load_window():
+    timeout = 5
+    try:
+        WebDriverWait(driver, timeout).until(
+            lambda driver: driver.execute_script('return document.readyState') == 'complete'
+        )
+    except TimeoutException:
+        print("Timed out waiting for page to load")
 
 def task_1():  # Оплачиваемое задание #1595642
     global driver, url_total, capcha_reshena
-    driver = webdriver.Chrome(
-        r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
+    # driver = webdriver.Chrome(
+        # r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
 
-    # driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
+    driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
 
     driver.get('https://www.google.com/')
     google_poisk = driver.find_element_by_name("q")
@@ -250,10 +269,10 @@ def task_1():  # Оплачиваемое задание #1595642
     find_google('Игры онлайн - Cofax.ru')
     viewing_ads()
 
-    driver = webdriver.Chrome(
-        r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
+    # driver = webdriver.Chrome(
+    #     r"C:\Users\admin\Downloads\chromedriver.exe")  # место расположения chromedriver.exe REDMIBOOK
 
-    # driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")
+    driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")
     driver.get('http://www.wmmail.ru/index.php?cf=akk-viewstat/')
 
     # вводим логин
@@ -308,16 +327,23 @@ def task_1():  # Оплачиваемое задание #1595642
     # value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     # style = "font-weight: bold;" >
 
+
+
     # нажимаем на кнопку подтвердить выполнение задания
 
     # element = driver.find_element_by_xpath('//input[@value = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]')
-    elements = driver.find_elements_by_xpath("//input[@type = 'submit']")
-    for element in elements:
-        print(element)
-        value_faunded = element.get_attribute("value")
-        print(value_faunded)
-        if value_faunded == "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":
-            element.click()
+
+    # elements = driver.find_elements_by_xpath("//input[@type = 'submit']")
+    # for element in elements:
+    #     print(element)
+    #     value_faunded = element.get_attribute("value")
+    #     print(value_faunded)
+    #     if value_faunded == "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Подтвердить выполнение задания&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;":
+    #         element.click()
+
+    element = driver.find_element_by_xpath("/html/body/div[2]/div/table/tbody/tr/td/table[4]/tbody/tr[1]/td[2]/"
+                                              "table[1]/tbody/tr[17]/td[2]/form/input[3]")
+    element.click()
 
     # < textarea
     # cols = ""
@@ -328,6 +354,8 @@ def task_1():  # Оплачиваемое задание #1595642
 
     # вводим данные в окно
     answer_window = driver.find_element_by_name("zdtext")
+    element = driver.find_element_by_xpath("/html/body/div[2]/div/table/tbody/tr/td/table[4]/tbody/tr[1]/td[2]/form/table/tbody/"
+                                           "tr[9]/td/textarea")
     answer_window.send_keys(url_total)
     answer_window.send_keys(Keys.LEFT_CONTROL + Keys.ENTER)  # это сочитание заменяет нажатие кнопки отправить
     # < input
@@ -361,10 +389,10 @@ def task_2():  # Оплачиваемое задание #1342716
     options.add_argument("--start-maximized")
 
 
-    driver = webdriver.Chrome(
-        r"C:\Users\admin\Downloads\chromedriver.exe", chrome_options=options)  # место расположения chromedriver.exe REDMIBOOK
+    # driver = webdriver.Chrome(
+    #     r"C:\Users\admin\Downloads\chromedriver.exe", chrome_options=options)  # место расположения chromedriver.exe REDMIBOOK
 
-    # driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
+    driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe", chrome_options=options)  # место расположения chromedriver.exe
     driver.get('https://www.google.com/')
     google_poisk = driver.find_element_by_name("q")
 
@@ -373,6 +401,8 @@ def task_2():  # Оплачиваемое задание #1342716
     google_poisk.send_keys(Keys.ENTER)
     find_google('Переезд в краснодар форум')
 
+    wait_load_window()
+
     # для отображения баннеров рекламы необходимо перейти по странице сайта через выпадающее меню
     driver.find_element_by_xpath("//i[@class = 'fa fm fa-clipboard']").click()  # после нажатия выпадает меню
     #< i class ="fa fm fa-clipboard" > < / i > Инфа о Кубани
@@ -380,11 +410,13 @@ def task_2():  # Оплачиваемое задание #1342716
     driver.find_element_by_xpath("//a[@href = '/viewforum.php?f=219']").click()  # переход на страницук сайта
     # < a href = "/viewforum.php?f=219" > Путеводитель по Краю < / a >
 
+    wait_load_window()
 
     time.sleep(5)
     # переход по верхнему баннеру
     ActionChains(driver).move_by_offset(1000, 100).click().perform()  # работает только для разрешения 1920х1080
 
+    wait_load_window()
 
     active_window()
     url = driver.current_url
@@ -392,23 +424,50 @@ def task_2():  # Оплачиваемое задание #1342716
     url_total_2 = [' ', ' ', 'Баннер в шапке сайта:', ' ']
     url_total_2.append(url)
     print(url_total_2)
-    time.sleep(2)
 
     return_main_window()
+    wait_load_window()
 
-    # # для отображения баннеров рекламы необходимо перейти по странице сайта через выпадающее меню
-    # driver.find_element_by_xpath("//i[@class = 'fa fm fa-clipboard']").click()  # после нажатия выпадает меню
-    # # < i class ="fa fm fa-clipboard" > < / i > Инфа о Кубани
-    #
-    # driver.find_element_by_xpath("//a[@href = '/viewforum.php?f=219']").click()  # переход на страницук сайта
-    # # < a href = "/viewforum.php?f=219" > Путеводитель по Краю < / a >
+    # для отображения баннеров рекламы необходимо перейти по странице сайта через выпадающее меню
+    driver.find_element_by_xpath("//i[@class = 'fa fm fa-clipboard']").click()  # после нажатия выпадает меню
+    # < i class ="fa fm fa-clipboard" > < / i > Инфа о Кубани
 
+    driver.find_element_by_xpath("//a[@href = '/viewforum.php?f=219']").click()  # переход на страницук сайта
+    # < a href = "/viewforum.php?f=219" > Путеводитель по Краю < / a >
+
+    wait_load_window()
     # переход по правому баннеру
+
     ActionChains(driver).reset_actions()
-    ActionChains(driver).move_by_offset(1820, 980).click().perform()   # работает только для разрешения 1920х1080
+    body = driver.find_element_by_tag_name('body')
+    width = body.size['width']
+    height = body.size['height']
+    print(width)
+    print(height)
+
+
+
+    # < span class ="topic-list-header--title" > < i class ="fa fa-handshake-o" > < / i > НАШИ ПАРТНЕРЫ < / span >
+    # /html/body/div[1]/div[3]/div/div/div[2]/div[2]/div[1]/span[1]
+    #
+    # // *[ @ id = 'aw0'] / img
+    # /html/body/div[1]/div/a/img
+
+
+
+    e = driver.find_element_by_xpath("/html/body/div[1]/div[3]/div/div/div[2]/div[2]/div[1]/span[1]")
+    location = e.location
+    size = e.size
+    print(location)
+    print(size)
+
+
+    ActionChains(driver).reset_actions()
+    ActionChains(driver).move_by_offset(1265, 370).click().perform()   # работает только для разрешения 1920х1080
     active_window()
     url = driver.current_url
     print(url)
+    url_total_2.append('Баннер в справа сайта:')
     url_total_2.append(url)
     print(url_total_2)
     time.sleep(2)
