@@ -262,11 +262,13 @@ def task_1():  # Оплачиваемое задание #1595642
 
     driver = webdriver.Chrome(r"C:\Users\andre\Downloads\chromedriver_win32\chromedriver.exe")  # место расположения chromedriver.exe
 
-    driver.get('https://www.google.com/')
-    google_poisk = driver.find_element_by_name("q")
-    google_poisk.send_keys('Cofax ru')
-    google_poisk.send_keys(Keys.ENTER)
-    find_google('Игры онлайн - Cofax.ru')
+    # driver.get('https://www.google.com/')
+    # google_poisk = driver.find_element_by_name("q")
+    # google_poisk.send_keys('Cofax ru')
+    # google_poisk.send_keys(Keys.ENTER)
+    # find_google('Игры онлайн - Cofax.ru')
+
+    driver.get('https://www.cofax.ru/')
     viewing_ads()
 
     # driver = webdriver.Chrome(
@@ -513,8 +515,8 @@ def task_2():  # Оплачиваемое задание #1342716
     # onclick = "setInterval(function fresh() {location.reload();} , 1000);" >
 
 
-# task_1()
-task_2()
+task_1()
+# task_2() # реклама отсутсвует
 
 
 
