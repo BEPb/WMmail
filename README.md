@@ -1,3 +1,13 @@
+![Profile views](https://gpvc.arturio.dev/BEPb) 
+![GitHub top language](https://img.shields.io/github/languages/top/BEPb/WMmail) 
+![GitHub language count](https://img.shields.io/github/languages/count/BEPb/WMmail)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/BEPb/WMmail)
+![GitHub repo size](https://img.shields.io/github/repo-size/BEPb/WMmail) 
+![GitHub](https://img.shields.io/github/license/BEPb/WMmail) 
+![GitHub last commit](https://img.shields.io/github/last-commit/BEPb/WMmail)
+
+![GitHub User's stars](https://img.shields.io/github/stars/BEPb?style=social)
+
 ## Бот Wmail.ru
 
 ____
